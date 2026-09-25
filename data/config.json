@@ -1,0 +1,27 @@
+{
+  "device": {
+    "name": "MantisTrax",
+    "dev_addr": "00000000",
+    "dev_eui": "",
+    "initial_fcnt": 0
+  },
+  "lorawan": {
+    "region": "US915",
+    "sub_band": 2,
+    "activation": "ABP",
+    "adr": false,
+    "f_port": 5,
+    "nwk_s_key": "00000000000000000000000000000000",
+    "app_s_key": "00000000000000000000000000000000"
+  },
+  "radio": {
+    "scan_all_data_rates": true,
+    "preferred_dr": 1,
+    "scan_hold_ms": 1200,
+    "lock_after_packet": true
+  },
+  "navigation": {
+    "max_range_m": 500,
+    "units": "imperial"
+  }
+}
