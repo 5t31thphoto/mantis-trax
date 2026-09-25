@@ -2,7 +2,7 @@
   "device": {
     "name": "MantisTrax",
     "dev_addr": "00000000",
-    "dev_eui": "",
+    "dev_eui": "2CF7F1C053000481",
     "initial_fcnt": 0
   },
   "lorawan": {
@@ -11,8 +11,8 @@
     "activation": "ABP",
     "adr": false,
     "f_port": 5,
-    "nwk_s_key": "00000000000000000000000000000000",
-    "app_s_key": "00000000000000000000000000000000"
+    "nwk_s_key": "54C9B31D5BE2AF3718DC6C2B1428DED5",
+    "app_s_key": "54C9B31D5BE2AF3718DC6C2B1428DED5"
   },
   "radio": {
     "scan_all_data_rates": true,
