@@ -1,0 +1,111 @@
+name: Build MantisTrax
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: mantistrax-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Expand root source ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          zips=( *.zip )
+          if (( ${#zips[@]} )); then
+            for z in "${zips[@]}"; do
+              echo "Expanding $z"
+              unzip -o "$z" -d .
+              rm -f "$z"
+            done
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -A
+            if ! git diff --cached --quiet; then
+              git commit -m "Expand MantisTrax source [skip ci]"
+              git push
+            fi
+          else
+            echo "No root ZIP to consume. Building checked-in source."
+          fi
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install PlatformIO
+        run: python -m pip install --upgrade platformio
+
+      - name: Build firmware
+        run: pio run -e mantis-trax
+
+      - name: Build LittleFS image
+        run: pio run -e mantis-trax -t buildfs
+
+      - name: Merge flash image
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade esptool
+          OUT="MantisTrax-merged.bin"
+          python -m esptool --chip esp32s3 merge_bin \
+            -o "$OUT" \
+            --flash_mode dio \
+            --flash_freq 80m \
+            --flash_size 8MB \
+            0x0000 .pio/build/mantis-trax/bootloader.bin \
+            0x8000 .pio/build/mantis-trax/partitions.bin \
+            0xe000 "$HOME/.platformio/packages/framework-arduinoespressif32/tools/partitions/boot_app0.bin" \
+            0x10000 .pio/build/mantis-trax/firmware.bin \
+            0x610000 .pio/build/mantis-trax/littlefs.bin
+
+      - name: Assemble Pages site
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf _site
+          mkdir -p _site
+          cp site/index.html _site/index.html
+          cp MantisTrax-merged.bin _site/MantisTrax-merged.bin
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Upload firmware artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MantisTrax-merged
+          path: MantisTrax-merged.bin
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
