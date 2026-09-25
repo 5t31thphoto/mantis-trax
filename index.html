@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MantisTrax</title>
+  <style>
+    :root {
+      --bg: #0a0f0a;
+      --fg: #e8f5e9;
+      --accent: #00e676;
+      --muted: #6b8f71;
+      --card: #121a12;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      background: var(--bg);
+      color: var(--fg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      line-height: 1.5;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid #1e2e1e;
+      border-radius: 12px;
+      padding: 2.5rem 2rem;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+    }
+    h1 {
+      color: var(--accent);
+      font-size: 1.75rem;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.35rem;
+    }
+    .tagline {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-bottom: 1.75rem;
+    }
+    p {
+      color: var(--fg);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      opacity: 0.9;
+    }
+    a.btn {
+      display: inline-block;
+      background: var(--accent);
+      color: #003d1a;
+      font-weight: 700;
+      text-decoration: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      transition: filter 0.15s, transform 0.15s;
+    }
+    a.btn:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+    }
+    .note {
+      margin-top: 1.75rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .note a { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>MantisTrax</h1>
+    <p class="tagline">OFF-GRID TRACKER LOCATOR</p>
+    <p>
+      Firmware for M5Stack Cardputer-Adv + Cap LoRa-1262.<br />
+      Receives SenseCAP T1000-A LoRaWAN uplinks directly — no gateway or cloud required.
+    </p>
+    <a class="btn" href="firmware.bin">Download firmware.bin</a>
+    <p class="note">
+      Flash with <code>esptool</code> or PlatformIO.<br />
+      See <a href="https://github.com/">README</a> for keys, pins, and setup.
+    </p>
+  </div>
+</body>
+</html>
